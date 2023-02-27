@@ -40,7 +40,7 @@ def fourier(y):
         bn[i] = (np.dot(y,np.sin(2*np.pi/len(y)*i*x)))
     return np.array([an/length*2,bn/length*2])
 
-x1, y1 = np.loadtxt(r"Session2\thermal_4min_a.txt", unpack=True, skiprows=3)
+x1, y1 = np.loadtxt(r"Session2\thermal_8min.txt", unpack=True, skiprows=3)
 an,bn = fourier(y1)[:,::4]
 
 transmission = np.sqrt(an[1:]**2+bn[1:]**2)/(200/np.pi/np.arange(1,len(an)))
@@ -53,11 +53,11 @@ phase_lag = np.arctan2(bn[1:],an[1:])
 # YOUR DATA:
 # =============================================================================
 trans_data = transmission #input your transmission data here
-trans_periods = 240/np.arange(1,len(an)) #input the corresponding periods here (s)
+trans_periods = 480/np.arange(1,len(an)) #input the corresponding periods here (s)
 
 phase_data = np.array([x if x>0 else x+2*np.pi for x in phase_lag]) #input your phase lag data here
 print(phase_data)
-phase_periods = 240/np.arange(1,len(an)) #input the corresponding periods here (s)
+phase_periods = 480/np.arange(1,len(an)) #input the corresponding periods here (s)
 r_out = 0.01025 #outer radius (m)
 r_in = 0.0025 #inner  radius (m)
 no_terms = 50 #number of terms you want to truncate the J0 Bessel Series to
@@ -258,8 +258,14 @@ print('\nDiffusivity - Phase Lags:')
 print(D_phase)
 
 import matplotlib.pyplot as plt
-fig, ax = plt.subplots(3)
-ax[0].plot(D_trans)
-ax[1].plot(D_phase)
-ax[2].plot(r_in**2/np.array(D_trans)*2*np.pi/240*np.arange(1,len(an)))
+fig, ax = plt.subplots(2)
+fig.tight_layout()
+
+ax[0].plot(D_trans[:10])
+ax[0].set_xlabel("number of harmonic")
+ax[0].set_ylabel("$D_TF$")
+ax[1].plot(D_phase[:10])
+ax[1].set_xlabel("number of harmonic")
+ax[1].set_ylabel("$D_TF$")
+
 plt.show()
